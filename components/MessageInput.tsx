@@ -27,7 +27,7 @@ export default function MessageInput({ onSend, disabled }: Props) {
     <div className="sticky bottom-0 border-t border-zinc-200 bg-white px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900">
       <form
         onSubmit={handleSubmit}
-        className="mx-auto flex max-w-2xl gap-2 sm:max-w-3xl"
+        className="mx-auto flex w-full max-w-2xl gap-2 lg:max-w-3xl"
       >
         <textarea
           ref={textareaRef}

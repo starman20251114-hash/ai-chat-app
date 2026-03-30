@@ -46,9 +46,9 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-full flex-col">
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-2xl sm:max-w-3xl">
+        <div className="mx-auto w-full max-w-2xl lg:max-w-3xl">
           {messages.length === 0 ? (
             <div className="flex h-full items-center justify-center py-32 text-sm text-zinc-400">
               メッセージを入力して会話を始めましょう
