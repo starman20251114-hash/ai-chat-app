@@ -20,16 +20,21 @@ chat.post("/", async (c) => {
     return c.json({ error: "messages is required" }, 400);
   }
 
-  const agent = mastra.getAgent("chatAgent");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = await agent.generate(messages as any);
+  try {
+    const agent = mastra.getAgent("chatAgent");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await agent.generate(messages as any);
 
-  return c.json({
-    message: {
-      role: "assistant",
-      content: result.text,
-    },
-  });
+    return c.json({
+      message: {
+        role: "assistant",
+        content: result.text,
+      },
+    });
+  } catch (err) {
+    console.error("[chat] agent error:", err);
+    return c.json({ error: "AI agent error" }, 500);
+  }
 });
 
 export default chat;
