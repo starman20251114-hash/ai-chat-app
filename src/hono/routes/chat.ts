@@ -1,13 +1,10 @@
 import { Hono } from "hono";
+import type { MessageListInput } from "@mastra/core/agent/message-list";
 import { mastra } from "../../mastra";
-
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+import type { Message } from "../../types/chat";
 
 type ChatRequestBody = {
-  messages: Message[];
+  messages: Pick<Message, "role" | "content">[];
 };
 
 const chat = new Hono();
@@ -22,8 +19,7 @@ chat.post("/", async (c) => {
 
   try {
     const agent = mastra.getAgent("chatAgent");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = await agent.generate(messages as any);
+    const result = await agent.generate(messages as MessageListInput);
 
     return c.json({
       message: {

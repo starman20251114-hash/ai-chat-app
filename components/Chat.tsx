@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
-
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+import type { Message } from "../src/types/chat";
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -19,7 +15,7 @@ export default function Chat() {
   }, [messages]);
 
   const handleSend = async (content: string) => {
-    const userMessage: Message = { role: "user", content };
+    const userMessage: Message = { id: crypto.randomUUID(), role: "user", content };
     const next = [...messages, userMessage];
     setMessages(next);
     setIsLoading(true);
@@ -28,17 +24,17 @@ export default function Chat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: next.map(({ role, content }) => ({ role, content })) }),
       });
 
       if (!res.ok) throw new Error("API error");
 
       const data = await res.json();
-      setMessages((prev) => [...prev, data.message as Message]);
+      setMessages((prev) => [...prev, { id: crypto.randomUUID(), ...data.message } as Message]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "エラーが発生しました。もう一度お試しください。" },
+        { id: crypto.randomUUID(), role: "assistant", content: "エラーが発生しました。もう一度お試しください。" },
       ]);
     } finally {
       setIsLoading(false);

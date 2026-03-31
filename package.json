@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.64",
-    "@anthropic-ai/sdk": "^0.80.0",
     "@mastra/core": "^1.17.0",
     "@prisma/client": "^6.19.2",
     "ai": "^6.0.141",

@@ -1,7 +1,4 @@
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
+import type { Message } from "../src/types/chat";
 
 type Props = {
   messages: Message[];
@@ -10,9 +7,9 @@ type Props = {
 export default function MessageList({ messages }: Props) {
   return (
     <div className="flex flex-col gap-4 px-4 py-6">
-      {messages.map((message, index) => (
+      {messages.map((message) => (
         <div
-          key={index}
+          key={message.id}
           className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
         >
           <div
