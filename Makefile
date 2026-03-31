@@ -59,4 +59,8 @@ deploy:
 		--region $(GCP_REGION) \
 		--platform managed \
 		--allow-unauthenticated \
+		--min-instances=0 \
+		--max-instances=10 \
+		--timeout=60 \
+		--set-secrets=ANTHROPIC_API_KEY=ANTHROPIC_API_KEY:latest,DATABASE_URL=DATABASE_URL:latest \
 		--project $(GCP_PROJECT_ID)
