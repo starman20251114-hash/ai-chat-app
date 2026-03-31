@@ -1,4 +1,13 @@
-.PHONY: install setup dev build start lint deploy
+.PHONY: install setup dev build start lint docker-build deploy
+
+# ── デプロイ変数（環境に合わせて変更する） ──────────────────────────────
+GCP_PROJECT_ID ?= your-project-id
+GCP_REGION     ?= asia-northeast1
+AR_REPO        ?= ai-chat
+IMAGE_NAME     ?= ai-chat-app
+SERVICE_NAME   ?= ai-chat-app
+IMAGE_TAG      ?= $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT_ID)/$(AR_REPO)/$(IMAGE_NAME)
+# ─────────────────────────────────────────────────────────────────────────
 
 # 依存パッケージのインストール + Prisma クライアント生成
 install:
@@ -31,6 +40,19 @@ start:
 lint:
 	npm run lint
 
-# Vercel へデプロイ（vercel CLI が必要）
+# Docker イメージをローカルでビルドして動作確認
+docker-build:
+	docker build -t $(IMAGE_NAME):local .
+	docker run --rm -p 3000:3000 \
+		--env-file .env.local \
+		$(IMAGE_NAME):local
+
+# Cloud Run へデプロイ（gcloud CLI が必要）
 deploy:
-	npx vercel --prod
+	gcloud builds submit --tag $(IMAGE_TAG) --project $(GCP_PROJECT_ID)
+	gcloud run deploy $(SERVICE_NAME) \
+		--image $(IMAGE_TAG) \
+		--region $(GCP_REGION) \
+		--platform managed \
+		--allow-unauthenticated \
+		--project $(GCP_PROJECT_ID)
