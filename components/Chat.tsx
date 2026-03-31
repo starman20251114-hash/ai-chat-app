@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ChatErrorBoundary from "./ChatErrorBoundary";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
 import type { Message } from "../src/types/chat";
 
-export default function Chat() {
+function ChatInner() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -43,6 +44,19 @@ export default function Chat() {
 
   return (
     <div className="flex h-full flex-col">
+      {messages.length > 0 && (
+        <div className="flex justify-end px-4 pt-3">
+          <div className="mx-auto w-full max-w-2xl lg:max-w-3xl flex justify-end">
+            <button
+              onClick={() => setMessages([])}
+              disabled={isLoading}
+              className="text-xs text-zinc-400 hover:text-zinc-600 disabled:opacity-50 dark:text-zinc-500 dark:hover:text-zinc-300"
+            >
+              会話をクリア
+            </button>
+          </div>
+        </div>
+      )}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto w-full max-w-2xl lg:max-w-3xl">
           {messages.length === 0 ? (
@@ -64,5 +78,13 @@ export default function Chat() {
       </div>
       <MessageInput onSend={handleSend} disabled={isLoading} />
     </div>
+  );
+}
+
+export default function Chat() {
+  return (
+    <ChatErrorBoundary>
+      <ChatInner />
+    </ChatErrorBoundary>
   );
 }
