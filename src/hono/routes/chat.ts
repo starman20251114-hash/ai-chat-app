@@ -4,6 +4,7 @@ import { mastra } from "../../mastra";
 import type { Message } from "../../types/chat";
 
 const MAX_MESSAGES = 100;
+const MAX_CONTENT_LENGTH = 4000;
 
 type ChatMessage = Pick<Message, "role" | "content">;
 
@@ -13,7 +14,8 @@ function isValidMessage(msg: unknown): msg is ChatMessage {
   return (
     (m.role === "user" || m.role === "assistant") &&
     typeof m.content === "string" &&
-    m.content.trim().length > 0
+    m.content.trim().length > 0 &&
+    m.content.length <= MAX_CONTENT_LENGTH
   );
 }
 
