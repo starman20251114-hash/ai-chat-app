@@ -1,6 +1,10 @@
 .PHONY: install setup dev build start lint docker-build deploy
 
-# ── デプロイ変数（環境に合わせて変更する） ──────────────────────────────
+# ── デプロイ変数（.env.local に設定するか、コマンド実行時に上書き可能） ──
+# 例: make deploy GCP_PROJECT_ID=your-project-id
+-include .env.local
+export
+
 GCP_PROJECT_ID ?= your-project-id
 GCP_REGION     ?= asia-northeast1
 AR_REPO        ?= ai-chat
