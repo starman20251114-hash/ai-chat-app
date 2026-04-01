@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ChatErrorBoundary from "./ChatErrorBoundary";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
-import type { Message } from "../src/types/chat";
+import type { ImageAttachment, Message } from "../src/types/chat";
 
 function ChatInner() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -15,8 +15,13 @@ function ChatInner() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = async (content: string) => {
-    const userMessage: Message = { id: crypto.randomUUID(), role: "user", content };
+  const handleSend = async (content: string, images: ImageAttachment[]) => {
+    const userMessage: Message = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content,
+      images: images.length > 0 ? images : undefined,
+    };
     const next = [...messages, userMessage];
     setMessages(next);
     setIsLoading(true);
@@ -25,7 +30,13 @@ function ChatInner() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.map(({ role, content }) => ({ role, content })) }),
+        body: JSON.stringify({
+          messages: next.map(({ role, content, images }) => ({
+            role,
+            content,
+            ...(images && images.length > 0 ? { images } : {}),
+          })),
+        }),
       });
 
       if (!res.ok) throw new Error("API error");

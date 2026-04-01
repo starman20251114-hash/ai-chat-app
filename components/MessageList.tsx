@@ -19,6 +19,19 @@ export default function MessageList({ messages }: Props) {
                 : "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
             }`}
           >
+            {message.images && message.images.length > 0 && (
+              <div className="mb-2 flex flex-wrap gap-2">
+                {message.images.map((img, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={i}
+                    src={`data:${img.mediaType};base64,${img.data}`}
+                    alt={`添付画像 ${i + 1}`}
+                    className="max-h-48 max-w-full rounded-lg object-contain"
+                  />
+                ))}
+              </div>
+            )}
             {message.content}
           </div>
         </div>
