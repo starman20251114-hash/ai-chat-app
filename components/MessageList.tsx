@@ -6,7 +6,7 @@ type Props = {
 
 export default function MessageList({ messages }: Props) {
   return (
-    <div className="flex flex-col gap-4 px-4 py-6">
+    <div className="flex flex-col gap-4 px-4 py-6" aria-live="polite" aria-label="会話履歴">
       {messages.map((message) => (
         <div
           key={message.id}
